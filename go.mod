@@ -76,4 +76,4 @@ replace github.com/confio/ics23/go v0.7.0 => github.com/confio/ics23/go v0.6.6
 
 replace github.com/cosmos/iavl v0.19.1 => github.com/cosmos/iavl v0.16.0
 
-replace github.com/treasurenetprotocol/treasurenet v1.0.1-beta => github.com/treasurenetprotocol/treasurenet v1.0.1-201023-ibc
+replace github.com/treasurenetprotocol/treasurenet v1.0.1-beta => github.com/treasurenetprotocol/treasurenet v1.0.2-231023-ibc
