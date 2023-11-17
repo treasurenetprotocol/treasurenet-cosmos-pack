@@ -296,8 +296,8 @@ func outstandingRewardsHandlerFn(clientCtx client.Context) http.HandlerFunc {
 		if rest.CheckInternalServerError(w, err) {
 			return
 		}
-		fmt.Printf("res id:%+v\n", res)
-		fmt.Printf("height id:%+v\n", height)
+		// fmt.Printf("res id:%+v\n", res)
+		// fmt.Printf("height id:%+v\n", height)
 		clientCtx = clientCtx.WithHeight(height)
 		rest.PostProcessResponse(w, clientCtx, res)
 	}

@@ -299,7 +299,6 @@ func (w *wrapper) SetSignatures(signatures ...signing.SignatureV2) error {
 			Sequence:  sig.Sequence,
 		}
 	}
-	fmt.Printf("rawSigs:%+v\n", rawSigs)
 	w.setSignerInfos(signerInfos)
 	w.setSignatures(rawSigs)
 

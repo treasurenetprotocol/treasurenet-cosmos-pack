@@ -1,8 +1,6 @@
 package secp256r1
 
 import (
-	"fmt"
-
 	"github.com/cosmos/cosmos-sdk/crypto/keys/internal/ecdsa"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 )
@@ -30,7 +28,6 @@ func (m *PrivKey) Type() string {
 
 // Sign hashes and signs the message usign ECDSA. Implements sdk.PrivKey interface.
 func (m *PrivKey) Sign(msg []byte) ([]byte, error) {
-	fmt.Printf("msg2=%x\n", msg)
 	return m.Secret.Sign(msg)
 }
 

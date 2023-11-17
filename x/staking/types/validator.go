@@ -359,8 +359,8 @@ func (v Validator) SharesFromTokens(amt sdk.Int) (sdk.Dec, error) {
 	if v.Tokens.IsZero() {
 		return sdk.ZeroDec(), ErrInsufficientShares
 	}
-	fmt.Printf("SharesFromTokens的值:%+v\n", v.GetTokens().String())
-	fmt.Printf("v.GetDelegatorShares()的值:%+v\n", v.GetDelegatorShares().String())
+	// fmt.Printf("SharesFromTokens的值:%+v\n", v.GetTokens().String())
+	// fmt.Printf("v.GetDelegatorShares()的值:%+v\n", v.GetDelegatorShares().String())
 	// return v.GetDelegatorShares().MulInt(amt).QuoInt(v.GetTokens()), nil
 	return v.GetDelegatorShares().MulInt(amt).Quo(v.GetDelegatorShares()), nil
 }
@@ -370,8 +370,8 @@ func (v Validator) SharesFromTokensNew(amt sdk.Int) (sdk.Dec, error) {
 	if v.Tokens.IsZero() {
 		return sdk.ZeroDec(), ErrInsufficientShares
 	}
-	fmt.Printf("SharesFromTokens的值:%+v\n", v.GetTokens().String())
-	fmt.Printf("v.GetDelegatorShares()的值:%+v\n", v.GetDelegatorShares().String())
+	// fmt.Printf("SharesFromTokens的值:%+v\n", v.GetTokens().String())
+	// fmt.Printf("v.GetDelegatorShares()的值:%+v\n", v.GetDelegatorShares().String())
 	return v.GetDelegatorShares().MulInt(amt).Quo(v.GetDelegatorShares()), nil
 }
 
@@ -477,8 +477,8 @@ func (v Validator) AddTokensFromDel(amount sdk.Int) (Validator, sdk.Dec) {
 		issuedShares = amount.ToDec()
 	} else {
 		shares, err := v.SharesFromTokens(amount)
-		fmt.Printf("shares的值:%+v\n", shares.String())
-		fmt.Printf("shares中Token的值:%+v\n", amount.String())
+		// fmt.Printf("shares的值:%+v\n", shares.String())
+		// fmt.Printf("shares中Token的值:%+v\n", amount.String())
 		if err != nil {
 			panic(err)
 		}

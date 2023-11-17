@@ -613,12 +613,12 @@ func (k Keeper) Delegate(
 	}
 
 	_, newShares = k.AddValidatorTokensAndShares(ctx, validator, bondAmt)
-	fmt.Printf("newShares的值:%+v\n", newShares.String())
+	// fmt.Printf("newShares的值:%+v\n", newShares.String())
 	// Update delegation
 	delegation.Shares = delegation.Shares.Add(newShares)
-	fmt.Printf("delegation.Shares的值:%+v\n", delegation.Shares.String())
+	// fmt.Printf("delegation.Shares的值:%+v\n", delegation.Shares.String())
 	k.SetDelegation(ctx, delegation)
-	fmt.Printf("delegation的值:%+v\n", delegation)
+	// fmt.Printf("delegation的值:%+v\n", delegation)
 	// Call the after-modification hook
 	k.AfterDelegationModified(ctx, delegatorAddress, delegation.GetValidatorAddr())
 	return newShares, nil
@@ -692,14 +692,14 @@ func (k Keeper) DelegateTat(
 		}
 	}
 	_, newShares = k.AddValidatorTatTokensAndShares(ctx, validator, bondAmt)
-	fmt.Println("Tat测试newShares:", newShares)
+	// fmt.Println("Tat测试newShares:", newShares)
 	// Update delegation
 	delegation.TatShares = delegation.Shares.Add(newShares)
 	k.SetDelegation(ctx, delegation)
 
 	// Call the after-modification hook
 	k.AfterDelegationModified(ctx, delegatorAddress, delegation.GetValidatorAddr())
-	fmt.Println("Tat测试创建validator的过程")
+	// fmt.Println("Tat测试创建validator的过程")
 	return newShares, nil
 }
 

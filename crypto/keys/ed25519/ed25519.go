@@ -50,7 +50,7 @@ func (privKey *PrivKey) Bytes() []byte {
 // If these conditions aren't met, Sign will panic or produce an
 // incorrect signature.
 func (privKey *PrivKey) Sign(msg []byte) ([]byte, error) {
-	fmt.Printf("msgnew=%x\n", msg)
+	// fmt.Printf("msgnew=%x\n", msg)
 	return ed25519.Sign(privKey.Key, msg), nil
 }
 

@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/rand"
-	"reflect"
 	"sort"
 	"strconv"
 	"strings"
@@ -333,8 +332,8 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, req abci.R
 			// Tatiterator := k.ValidatorsNewPowerStoreIterator(ctx)
 			// defer Tatiterator.Close()
 			listsupervalidator, listvalidator := k.CombinedSliceList(ctx, iterator, maxValidators, log)
-			fmt.Println("listsupervalidatoe:", listsupervalidator)
-			fmt.Println("listvalidator", listvalidator)
+			// fmt.Println("listsupervalidatoe:", listsupervalidator)
+			// fmt.Println("listvalidator", listvalidator)
 			newselectlist := SelectList(listsupervalidator, listvalidator, req)
 			// newlist := make(map[string]string, len(newselectlist))
 			// for _, value := range newselectlist {
@@ -453,7 +452,7 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, req abci.R
 				// part of the bonded validator set
 				valAddr := sdk.ValAddress(iterator.Value())
 				validator := k.mustGetValidator(ctx, valAddr)
-				fmt.Printf("validator eventlog.MsgIndex == 2  :%+v\n", validator)
+				// fmt.Printf("validator eventlog.MsgIndex == 2  :%+v\n", validator)
 				if validator.Jailed {
 					panic("should never retrieve a jailed validator from the power store")
 				}
@@ -465,7 +464,7 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, req abci.R
 				}
 
 				valAddrStr, err := sdk.Bech32ifyAddressBytes(sdk.GetConfig().GetBech32ValidatorAddrPrefix(), valAddr)
-				fmt.Println("valAddrStr2:", valAddrStr)
+				// fmt.Println("valAddrStr2:", valAddrStr)
 				if err != nil {
 					return nil, err
 				}
@@ -617,7 +616,7 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, req abci.R
 	if len(updates) > 0 {
 		k.SetLastTotalPower(ctx, totalPower)
 	}
-	fmt.Println("updates:", updates)
+	// fmt.Println("updates:", updates)
 	return updates, err
 }
 
@@ -885,30 +884,30 @@ func (k Keeper) CombinedSliceList(ctx sdk.Context, iterator sdk.Iterator, maxVal
 					k.SetNewToken2(ctx, NewZero, valAddr)
 				} else {
 					for _, vlog := range Data {
-						fmt.Printf("Conversion of account address to verifier address :%+v\n", vlog[0].(string))
+						// fmt.Printf("Conversion of account address to verifier address :%+v\n", vlog[0].(string))
 						a := []byte(vlog[0].(string))
 						c := string(a[2:])
 						s := strings.ToUpper(c)
 						NewValidatoradd, _ := sdk.ValAddressFromHex(s)
 						NewValidatoraddstring := NewValidatoradd.String()
-						fmt.Printf("CombinedSliceList validatorstring :%+v\n", validatorstring)
-						fmt.Printf("CombinedSliceList NewValidatoraddstring :%+v\n", NewValidatoraddstring)
+						// fmt.Printf("CombinedSliceList validatorstring :%+v\n", validatorstring)
+						// fmt.Printf("CombinedSliceList NewValidatoraddstring :%+v\n", NewValidatoraddstring)
 						if validatorstring == NewValidatoraddstring {
 							//	ListSuperValidator = append(ListValidator, validatorstring)
 							ListSuperValidator = append(ListSuperValidator, validatorstring)
-							fmt.Printf("CombinedSliceList ListSuperValidator :%+v\n", ListSuperValidator)
+							// fmt.Printf("CombinedSliceList ListSuperValidator :%+v\n", ListSuperValidator)
 						}
-						fmt.Println(reflect.TypeOf(vlog[1]))
+						// fmt.Println(reflect.TypeOf(vlog[1]))
 						stringtat := strconv.FormatFloat(vlog[1].(float64), 'f', -1, 64)
-						fmt.Println("stringtat:", stringtat)
+						// fmt.Println("stringtat:", stringtat)
 						tat, _ = sdk.NewIntFromString(stringtat)
 						stringunit := strconv.FormatFloat(vlog[1].(float64), 'f', -1, 64)
-						fmt.Println("stringunit:", stringunit)
+						// fmt.Println("stringunit:", stringunit)
 						newunit, _ = sdk.NewIntFromString(stringunit)
 						newtat, _ := tat.MarshalJSON()
 						newunitbyte, _ := newunit.MarshalJSON()
-						fmt.Println("newtat:", newtat)
-						fmt.Println("newunitbyte:", newunitbyte)
+						// fmt.Println("newtat:", newtat)
+						// fmt.Println("newunitbyte:", newunitbyte)
 						k.SetTat2(ctx, newtat, NewValidatoradd)
 						k.SetNewToken2(ctx, newunitbyte, NewValidatoradd)
 					}

@@ -367,7 +367,7 @@ func (ks keystore) Sign(uid string, msg []byte) ([]byte, types.PubKey, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	fmt.Printf("sig=%+v\n", sig)
+	// fmt.Printf("sig=%+v\n", sig)
 
 	return sig, priv.PubKey(), nil
 }

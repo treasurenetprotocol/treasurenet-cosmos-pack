@@ -76,7 +76,7 @@ func (k Querier) Validators(c context.Context, req *types.QueryValidatorsRequest
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
-	fmt.Printf("接口测试查询token占比validators:%+v\n", validators)
+	// fmt.Printf("接口测试查询token占比validators:%+v\n", validators)
 	return &types.QueryValidatorsResponse{Validators: validators, Pagination: pageRes}, nil
 }
 
@@ -321,13 +321,13 @@ func (k Querier) DelegatorTotalDelegations(c context.Context, req *types.QueryDe
 	var delegations types.Delegations
 	ctx := sdk.UnwrapSDKContext(c)
 	balances := sdk.NewCoin(k.BondDenom(ctx), sdk.ZeroInt())
-	fmt.Printf("value.Balance2:%+v", balances)
+	// fmt.Printf("value.Balance2:%+v", balances)
 	// var newAmount sdk.Int
 	delAddr, err := sdk.AccAddressFromBech32(req.DelegatorAddr)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("测试断点:%+v", delAddr)
+	// fmt.Printf("测试断点:%+v", delAddr)
 	store := ctx.KVStore(k.storeKey)
 	delStore := prefix.NewStore(store, types.GetDelegationsKey(delAddr))
 	_, err = query.Paginate(delStore, req.Pagination, func(key []byte, value []byte) error {
@@ -346,9 +346,9 @@ func (k Querier) DelegatorTotalDelegations(c context.Context, req *types.QueryDe
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
-	fmt.Printf("delegationResps:%+v", delegationResps)
+	// fmt.Printf("delegationResps:%+v", delegationResps)
 	for _, value := range delegationResps {
-		fmt.Printf("value.Balance:%+v", value.Balance)
+		// fmt.Printf("value.Balance:%+v", value.Balance)
 		balances = balances.Add(value.Balance)
 	}
 

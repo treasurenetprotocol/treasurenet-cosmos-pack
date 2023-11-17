@@ -90,7 +90,6 @@ func (sk *PrivKey) Bytes() []byte {
 // It then raw encodes the signature as two fixed width 32-byte values
 // concatenated, reusing the code copied from secp256k1_nocgo.go
 func (sk *PrivKey) Sign(msg []byte) ([]byte, error) {
-	fmt.Printf("msg3=%x\n", msg)
 	digest := sha256.Sum256(msg)
 	r, s, err := ecdsa.Sign(rand.Reader, &sk.PrivateKey, digest[:])
 
