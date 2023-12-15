@@ -46,7 +46,7 @@ require (
 	github.com/tendermint/go-amino v0.16.0
 	github.com/tendermint/tendermint v0.34.21
 	github.com/tendermint/tm-db v0.6.7
-	github.com/treasurenetprotocol/treasurenet v1.0.1-beta
+	github.com/treasurenetprotocol/treasurenet v1.0.2-231023-ibc
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa
 	google.golang.org/genproto v0.0.0-20220810155839-1856144b1d9c
 	google.golang.org/grpc v1.48.0
