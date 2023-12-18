@@ -61,13 +61,13 @@ func (spkd SetPubKeyDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simulate b
 	}
 
 	pubkeys, err := sigTx.GetPubKeys()
-	//fmt.Printf("sigTx.GetPubKeys():=%+v\n", pubkeys)
+	fmt.Printf("sigTx.GetPubKeys():=%+v\n", pubkeys)
 	if err != nil {
 		return ctx, err
 	}
-	//fmt.Println("123123123")
+	fmt.Println("123123123")
 	signers := sigTx.GetSigners()
-	//fmt.Printf("signers is:=%+v\n", signers)
+	fmt.Printf("signers is:=%+v\n", signers)
 	for i, pk := range pubkeys {
 		// PublicKey was omitted from slice since it has already been set in context
 		if pk == nil {
@@ -75,11 +75,11 @@ func (spkd SetPubKeyDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simulate b
 				continue
 			}
 			pk = simSecp256k1Pubkey
-			//fmt.Printf("pk is:=%+v\n", pk)
+			fmt.Printf("pk is:=%+v\n", pk)
 		}
 		// Only make check if simulate=false
-		//fmt.Printf("pk.Address():=%+v\n", pk.Address())
-		//fmt.Printf("signers[i]:=%+v\n", signers[i])
+		fmt.Printf("pk.Address():=%+v\n", pk.Address())
+		fmt.Printf("signers[i]:=%+v\n", signers[i])
 		if !simulate && !bytes.Equal(pk.Address(), signers[i]) {
 			return ctx, sdkerrors.Wrapf(sdkerrors.ErrInvalidPubKey,
 				"pubKey does not match signer address %s with signer index: %d", signers[i], i)
