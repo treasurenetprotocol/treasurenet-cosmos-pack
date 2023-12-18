@@ -18,6 +18,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/legacy/legacytx"
 	authsigning "github.com/cosmos/cosmos-sdk/x/auth/signing"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
+	"github.com/treasurenetprotocol/treasurenet/crypto/ethsecp256k1"
 )
 
 var (
@@ -80,10 +81,16 @@ func (spkd SetPubKeyDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simulate b
 		// Only make check if simulate=false
 		fmt.Printf("pk.Address():=%+v\n", pk.Address())
 		fmt.Printf("signers[i]:=%+v\n", signers[i])
-		if !simulate && !bytes.Equal(pk.Address(), signers[i]) {
+		pubB := &ethsecp256k1.PubKey{Key: pk.Bytes()}
+		fmt.Printf("pubB.Address():=%+v\n", pubB.Address())
+		if !simulate && !bytes.Equal(pubB.Address(), signers[i]) {
 			return ctx, sdkerrors.Wrapf(sdkerrors.ErrInvalidPubKey,
 				"pubKey does not match signer address %s with signer index: %d", signers[i], i)
 		}
+		// if !simulate && !bytes.Equal(pk.Address(), signers[i]) {
+		// 	return ctx, sdkerrors.Wrapf(sdkerrors.ErrInvalidPubKey,
+		// 		"pubKey does not match signer address %s with signer index: %d", signers[i], i)
+		// }
 
 		acc, err := GetSignerAcc(ctx, spkd.ak, signers[i])
 		if err != nil {
