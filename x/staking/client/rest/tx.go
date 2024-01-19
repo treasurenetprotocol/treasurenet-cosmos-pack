@@ -11,6 +11,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/rest"
 	"github.com/cosmos/cosmos-sdk/x/staking/types"
+	tntype "github.com/treasurenetprotocol/treasurenet/x/gravity/types"
 )
 
 func registerTxHandlers(clientCtx client.Context, r *mux.Router) {
@@ -42,6 +43,10 @@ func registerTxHandlers(clientCtx client.Context, r *mux.Router) {
 		"/staking/delegators/{delegatorAddr}/getPubkey",
 		NewPostGetPubKeyFn(clientCtx),
 	).Methods("POST")
+	r.HandleFunc(
+		"/staking/delegatorscross/{delegatorAddr}/getPubkey",
+		NewPostCrossGetPubKeyFn(clientCtx),
+	).Methods("POST")
 }
 
 type (
@@ -51,6 +56,14 @@ type (
 		DelegatorAddress sdk.AccAddress `json:"delegator_address" yaml:"delegator_address"` // in bech32
 		ValidatorAddress sdk.ValAddress `json:"validator_address" yaml:"validator_address"` // in bech32
 		Amount           sdk.Coin       `json:"amount" yaml:"amount"`
+	}
+	// DelegateRequest defines the properties of a delegation request's body.
+	DelegateCrossRequest struct {
+		BaseReq   rest.BaseReq   `json:"base_req" yaml:"base_req"`
+		Sender    sdk.AccAddress `json:"sender" yaml:"sender"`     // in bech32
+		EthDest   string         `json:"eth_dest" yaml:"eth_dest"` // in bech32
+		Amount    sdk.Coin       `json:"amount" yaml:"amount"`
+		BridgeFee sdk.Coin       `json:"bridge_fee" yaml:"bridge_fee"`
 	}
 
 	// RedelegateRequest defines the properties of a redelegate request's body.
@@ -299,5 +312,52 @@ func NewPostGetPubKeyFn(clientCtx client.Context) http.HandlerFunc {
 		// }
 
 		tx.WritePubkeyTxResponse(clientCtx, w, req.BaseReq, req.DelegatorAddress, msg)
+	}
+}
+
+func NewPostCrossGetPubKeyFn(clientCtx client.Context) http.HandlerFunc {
+	// return func(w http.ResponseWriter, r *http.Request) {
+	// 	var req DelegateRequest
+
+	// 	msg := types.NewMsgGetPubkey(req.Pubkey, req.AccountAddress)
+
+	// 	tx.WritePubkeyTxResponse(clientCtx, w, req.BaseReq, msg)
+	// }
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req DelegateCrossRequest
+		if !rest.ReadRESTReq(w, r, clientCtx.LegacyAmino, &req) {
+			return
+		}
+
+		// req.BaseReq = req.BaseReq.Sanitize()
+		// if !req.BaseReq.ValidateBasic(w) {
+		// 	return
+		// }
+
+		// Make the message
+		ethAddr, _ := tntype.NewEthAddress(req.EthDest)
+		// msg := tntype.NewMsgSendToEth(req.Sender, req.EthDest, req.Amount, req.BridgeFee)
+		msg := tntype.MsgSendToEth{
+			Sender:    req.Sender.String(),
+			EthDest:   ethAddr.GetAddress().Hex(),
+			Amount:    req.Amount,
+			BridgeFee: req.BridgeFee,
+		}
+		// msg := types.NewMsgDelegate(req.Sender, req.ValidatorAddress, req.Amount)
+		// if rest.CheckBadRequestError(w, msg.ValidateBasic()) {
+		// 	return
+		// }
+
+		// fromAddr, err := sdk.AccAddressFromBech32(req.BaseReq.From)
+		// if rest.CheckBadRequestError(w, err) {
+		// 	return
+		// }
+
+		// if !bytes.Equal(fromAddr, req.DelegatorAddress) {
+		// 	rest.WriteErrorResponse(w, http.StatusUnauthorized, "must use own delegator address")
+		// 	return
+		// }
+
+		tx.WriteCrossPubkeyTxResponse(clientCtx, w, req.BaseReq, req.Sender, &msg)
 	}
 }
