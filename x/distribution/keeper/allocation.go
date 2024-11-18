@@ -224,6 +224,7 @@ func (k Keeper) AllocateTokensToValidator(ctx sdk.Context, val stakingtypes.Vali
 	//fmt.Printf("outstanding:%+v\n", outstanding)
 	outstanding.Rewards = outstanding.Rewards.Add(tokens...)
 	//fmt.Printf("outstanding.Rewards:%+v\n", outstanding.Rewards)
+
 	k.SetValidatorOutstandingRewards(ctx, val.GetOperator(), outstanding)
 }
 
