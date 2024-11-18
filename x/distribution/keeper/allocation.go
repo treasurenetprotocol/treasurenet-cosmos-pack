@@ -160,7 +160,7 @@ func (k Keeper) AllocateTokens(
 		//fmt.Printf("powerFraction:%+v\n", powerFraction)
 		//fmt.Println("不质押TAT feesCollected:", feesCollected)
 		reward := feesCollected.MulDecTruncate(voteMultiplier).MulDecTruncate(powerFraction)
-		fmt.Printf("reward:%+v\n", reward)
+		//fmt.Printf("reward:%+v\n", reward)
 		k.AllocateTokensToValidator(ctx, validator, reward)
 		remaining = remaining.Sub(reward)
 	}
@@ -190,7 +190,7 @@ func (k Keeper) AllocateTokens(
 func (k Keeper) AllocateTokensToValidator(ctx sdk.Context, val stakingtypes.ValidatorI, tokens sdk.DecCoins) {
 	// split tokens between validator and delegators according to commission
 	commission := tokens.MulDec(val.GetCommission())
-	fmt.Printf("commission:%+v\n", commission)
+	//fmt.Printf("commission:%+v\n", commission)
 	shared := tokens.Sub(commission)
 	// update current commission
 	ctx.EventManager().EmitEvent(
@@ -206,10 +206,10 @@ func (k Keeper) AllocateTokensToValidator(ctx sdk.Context, val stakingtypes.Vali
 
 	// update current rewards
 	currentRewards := k.GetValidatorCurrentRewards(ctx, val.GetOperator())
-	fmt.Printf("currentRewards:%+v\n", currentRewards)
+	//fmt.Printf("currentRewards:%+v\n", currentRewards)
 	currentRewards.Rewards = currentRewards.Rewards.Add(shared...)
-	fmt.Printf("shared:%+v\n", shared)
-	fmt.Printf("currentRewards.Rewards:%+v\n", currentRewards.Rewards)
+	//fmt.Printf("shared:%+v\n", shared)
+	//fmt.Printf("currentRewards.Rewards:%+v\n", currentRewards.Rewards)
 	k.SetValidatorCurrentRewards(ctx, val.GetOperator(), currentRewards)
 
 	// update outstanding rewards
@@ -221,9 +221,9 @@ func (k Keeper) AllocateTokensToValidator(ctx sdk.Context, val stakingtypes.Vali
 		),
 	)
 	outstanding := k.GetValidatorOutstandingRewards(ctx, val.GetOperator())
-	fmt.Printf("outstanding:%+v\n", outstanding)
+	//fmt.Printf("outstanding:%+v\n", outstanding)
 	outstanding.Rewards = outstanding.Rewards.Add(tokens...)
-	fmt.Printf("outstanding.Rewards:%+v\n", outstanding.Rewards)
+	//fmt.Printf("outstanding.Rewards:%+v\n", outstanding.Rewards)
 	k.SetValidatorOutstandingRewards(ctx, val.GetOperator(), outstanding)
 }
 
