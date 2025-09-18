@@ -23,9 +23,9 @@ func BlockCommand() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// clientCtx, err := client.GetClientQueryContext(cmd)
 			// if err != nil {
-				return err
-			}
-			var height *int64
+			//	return err
+			// }
+			var _ *int64
 
 			// optional height
 			if len(args) > 0 {
@@ -35,7 +35,7 @@ func BlockCommand() *cobra.Command {
 				}
 				if h > 0 {
 					tmp := int64(h)
-					height = &tmp
+					_ = &tmp
 				}
 			}
 
