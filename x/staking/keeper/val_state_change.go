@@ -452,7 +452,7 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, req abci.R
 				// part of the bonded validator set
 				valAddr := sdk.ValAddress(iterator.Value())
 				validator := k.mustGetValidator(ctx, valAddr)
-				fmt.Printf("validator eventlog.MsgIndex == 2  :%+v\n", validator)
+				// fmt.Printf("validator eventlog.MsgIndex == 2  :%+v\n", validator)
 				if validator.Jailed {
 					panic("should never retrieve a jailed validator from the power store")
 				}
@@ -980,7 +980,7 @@ func MicsSlice(origin []string, count int, req abci.RequestEndBlock) []string {
 	rand.Shuffle(len(tmpOrigin), func(i int, j int) {
 		tmpOrigin[i], tmpOrigin[j] = tmpOrigin[j], tmpOrigin[i]
 	})
-	fmt.Println(tmpOrigin)
+	// fmt.Println(tmpOrigin)
 	result := make([]string, 0, count)
 	for index, value := range tmpOrigin {
 		if index == count {
