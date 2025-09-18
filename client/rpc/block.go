@@ -2,7 +2,6 @@ package rpc
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -45,7 +44,7 @@ func BlockCommand() *cobra.Command {
 				return err
 			}
 
-			fmt.Println(string(output))
+			// fmt.Println(string(output))
 			return nil
 		},
 	}

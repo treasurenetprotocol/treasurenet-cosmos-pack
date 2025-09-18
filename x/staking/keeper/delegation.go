@@ -754,14 +754,14 @@ func (k Keeper) DelegateTat(
 		}
 	}
 	_, newShares = k.AddValidatorTatTokensAndShares(ctx, validator, bondAmt)
-	fmt.Println("Tat测试newShares:", newShares)
+	// fmt.Println("Tat测试newShares:", newShares)
 	// Update delegation
 	delegation.TatShares = delegation.Shares.Add(newShares)
 	k.SetDelegation(ctx, delegation)
 
 	// Call the after-modification hook
 	k.AfterDelegationModified(ctx, delegatorAddress, delegation.GetValidatorAddr())
-	fmt.Println("Tat测试创建validator的过程")
+	// fmt.Println("Tat测试创建validator的过程")
 	return newShares, nil
 }
 

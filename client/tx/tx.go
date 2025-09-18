@@ -240,8 +240,8 @@ func WritePubkeyTxResponse(
 		// fmt.Printf("address is :%+v\n", address)
 	}
 	ptr, _ := clientCtx.Codec.MarshalInterfaceJSON(pubB)
-	fmt.Println("ptr=\n", ptr)
-	//fmt.Println("ptr2=\n", pubB.GetKey())
+	// fmt.Println("ptr=\n", ptr)
+	// fmt.println("ptr2=\n", pubB.GetKey())
 	var pk cryptotypes.PubKey
 	_ = clientCtx.Codec.UnmarshalInterfaceJSON(ptr, &pk)
 	fmt.Println("pk=\n", pk)
@@ -371,7 +371,7 @@ func WriteCrossPubkeyTxResponse(
 	}
 	ptr, _ := clientCtx.Codec.MarshalInterfaceJSON(pubB)
 	fmt.Println("cross_chain ptr=\n", ptr)
-	//fmt.Println("ptr2=\n", pubB.GetKey())
+	// fmt.println("ptr2=\n", pubB.GetKey())
 	var pk cryptotypes.PubKey
 	_ = clientCtx.Codec.UnmarshalInterfaceJSON(ptr, &pk)
 	fmt.Println("cross_chain pk=\n", pk)

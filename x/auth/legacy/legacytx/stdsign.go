@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"gopkg.in/yaml.v2"
-
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/codec/legacy"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -73,14 +71,14 @@ func StdSignBytes(chainID string, accnum, sequence, timeout uint64, fee StdFee, 
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("StdSignBytes生成的BZ:", string(bz))
+	// fmt.Println("StdSignBytes生成的BZ:", string(bz))
 	return sdk.MustSortJSON(bz)
 }
 
 // Deprecated: StdSignature represents a sig
 type StdSignature struct {
 	cryptotypes.PubKey `json:"pub_key" yaml:"pub_key"` // optional
-	Signature          []byte                          `json:"signature" yaml:"signature"`
+	Signature          []byte `json:"signature" yaml:"signature"`
 }
 
 // Deprecated

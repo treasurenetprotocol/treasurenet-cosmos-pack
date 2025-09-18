@@ -125,7 +125,7 @@ func (k Keeper) GetTatPower2(ctx sdk.Context, addr sdk.ValAddress) (tatpower sdk
 	if err != nil {
 		return sdk.ZeroInt(), false
 	}
-	fmt.Println("TatPower:", tatpower)
+	// fmt.Println("TatPower:", tatpower)
 	return tatpower, true
 }
 func (k Keeper) GetNewUnitPower(ctx sdk.Context, addr sdk.ValAddress) (newunitpower sdk.Int, found bool) {
@@ -431,7 +431,7 @@ func (k Keeper) GetValidators(ctx sdk.Context, maxRetrieve uint32) (validators [
 func (k Keeper) GetBondedValidatorsByPower(ctx sdk.Context) []types.Validator {
 	maxValidators := k.MaxValidators(ctx)
 	validators := make([]types.Validator, maxValidators)
-	//fmt.Println("测试GetBondedValidatorsByPower")
+	// fmt.println("测试GetBondedValidatorsByPower")
 	iterator := k.ValidatorsPowerStoreIterator(ctx)
 	defer iterator.Close()
 
