@@ -21,8 +21,8 @@ func BlockCommand() *cobra.Command {
 		Short: "Get verified data for a the block at given height",
 		Args:  cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx, err := client.GetClientQueryContext(cmd)
-			if err != nil {
+			// clientCtx, err := client.GetClientQueryContext(cmd)
+			// if err != nil {
 				return err
 			}
 			var height *int64
@@ -39,10 +39,10 @@ func BlockCommand() *cobra.Command {
 				}
 			}
 
-			output, err := getBlock(clientCtx, height)
-			if err != nil {
-				return err
-			}
+			// output, err := getBlock(clientCtx, height)
+			// if err != nil {
+			//	return err
+			// }
 
 			// fmt.Println(string(output))
 			return nil
