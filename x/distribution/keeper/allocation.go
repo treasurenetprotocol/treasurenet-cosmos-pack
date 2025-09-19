@@ -93,6 +93,9 @@ func (k Keeper) AllocateTokens(
 	communityTax := k.GetCommunityTax(ctx) // Community tax
 	tatReward := k.GetTatReward(ctx)       // Tat reward rate
 	// fmt.println("tatReward:", tatReward)
+	ctx.Logger().Info("Tat Reward Rate",
+		"rate", tatReward,
+	)
 	// allocate tokens proportionally to voting power
 	// TODO consider parallelizing later, ref https://github.com/cosmos/cosmos-sdk/pull/3099#discussion_r246276376
 	var voteMultiplier sdk.Dec
@@ -115,6 +118,15 @@ func (k Keeper) AllocateTokens(
 			votetatnum++
 		}
 	}
+	ctx.Logger().Info("tattotalpower",
+		"power", tattotalpower,
+	)
+	ctx.Logger().Info("alltokenpower",
+		"power", alltokenpower,
+	)
+	ctx.Logger().Info("votetatnum++",
+		"vote", votetatnum,
+	)
 	// fmt.println("tattotalpower：", tattotalpower)
 	// fmt.println("alltokenpower：", alltokenpower)
 	// fmt.println("votetatnum++：", votetatnum)
@@ -135,6 +147,9 @@ func (k Keeper) AllocateTokens(
 			// fmt.println("测试supervalidator在active validator中的比例:", votetatnumFraction)
 			tatreward := feesCollected.MulDecTruncate(tatReward).MulDecTruncate(tatpowerFraction).MulDecTruncate(votetatnumFraction)
 			//fmt.Printf("reward:%+v\n", tatreward)
+			ctx.Logger().Info("tatreward",
+				"reward", tatreward,
+			)
 			// k.AllocateTokensToValidator(ctx, validator, tatreward)
 			k.AllocateTokensToValidatorTat(ctx, validator, tatreward)
 			remaining = remaining.Sub(tatreward)
