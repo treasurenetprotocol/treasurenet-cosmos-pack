@@ -868,7 +868,7 @@ func (k Keeper) CombinedSliceList(ctx sdk.Context, iterator sdk.Iterator, maxVal
 	var newunit sdk.Int
 	for count := 0; iterator.Valid() && count < int(maxValidators); iterator.Next() {
 		valAddr := sdk.ValAddress(iterator.Value())
-		// fmt.Println("valAddr:", valAddr)
+		ctx.Logger().Info("validator address", "valAddr", valAddr)
 		validatorstring := valAddr.String()
 		for _, eventlog := range log {
 			if eventlog.MsgIndex == 1 {
@@ -884,18 +884,24 @@ func (k Keeper) CombinedSliceList(ctx sdk.Context, iterator sdk.Iterator, maxVal
 					k.SetNewToken2(ctx, NewZero, valAddr)
 				} else {
 					for _, vlog := range Data {
-						fmt.Printf("Conversion of account address to verifier address :%+v\n", vlog[0].(string))
+						ctx.Logger().Info("Conversion of account address to verifier address",
+							"verifier", vlog[0].(string),
+						)
 						a := []byte(vlog[0].(string))
 						c := string(a[2:])
 						s := strings.ToUpper(c)
 						NewValidatoradd, _ := sdk.ValAddressFromHex(s)
 						NewValidatoraddstring := NewValidatoradd.String()
-						fmt.Printf("CombinedSliceList validatorstring :%+v\n", validatorstring)
-						fmt.Printf("CombinedSliceList NewValidatoraddstring :%+v\n", NewValidatoraddstring)
+						ctx.Logger().Info("CombinedSliceList values",
+							"validatorstring", validatorstring,
+							"new_validator_addrs", NewValidatoraddstring,
+						)
 						if validatorstring == NewValidatoraddstring {
 							//	ListSuperValidator = append(ListValidator, validatorstring)
 							ListSuperValidator = append(ListSuperValidator, validatorstring)
-							fmt.Printf("CombinedSliceList ListSuperValidator :%+v\n", ListSuperValidator)
+							ctx.Logger().Info("CombinedSliceList ListSuperValidator",
+								"list_super_validator", ListSuperValidator,
+							)
 						}
 						// fmt.Println(reflect.TypeOf(vlog[1]))
 						stringtat := strconv.FormatFloat(vlog[1].(float64), 'f', -1, 64)
