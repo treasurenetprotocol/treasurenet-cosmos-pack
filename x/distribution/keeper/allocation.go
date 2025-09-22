@@ -118,13 +118,13 @@ func (k Keeper) AllocateTokens(
 			votetatnum++
 		}
 	}
-	ctx.Logger().Info("tattotalpower",
+	ctx.Logger().Info("TAT Total Power",
 		"power", tattotalpower,
 	)
-	ctx.Logger().Info("alltokenpower",
+	ctx.Logger().Info("All Token Power",
 		"power", alltokenpower,
 	)
-	ctx.Logger().Info("votetatnum++",
+	ctx.Logger().Info("Vote Tat Amount",
 		"vote", votetatnum,
 	)
 	// fmt.println("tattotalpower：", tattotalpower)
