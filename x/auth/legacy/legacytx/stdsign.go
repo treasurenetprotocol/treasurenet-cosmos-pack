@@ -73,7 +73,7 @@ func StdSignBytes(chainID string, accnum, sequence, timeout uint64, fee StdFee, 
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("StdSignBytes生成的BZ:", string(bz))
+	// fmt.Println("StdSignBytes生成的BZ:", string(bz))
 	return sdk.MustSortJSON(bz)
 }
 

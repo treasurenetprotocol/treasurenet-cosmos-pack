@@ -35,7 +35,7 @@ func (s *StdTxBuilder) SetMsgs(msgs ...sdk.Msg) error {
 
 // SetSignatures implements TxBuilder.SetSignatures.
 func (s *StdTxBuilder) SetSignatures(signatures ...signing.SignatureV2) error {
-	fmt.Println("SetSignatures进行时2")
+	// fmt.Println("SetSignatures进行时2")
 	sigs := make([]StdSignature, len(signatures))
 	var err error
 	for i, sig := range signatures {

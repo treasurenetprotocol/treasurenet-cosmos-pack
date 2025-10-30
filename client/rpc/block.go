@@ -2,7 +2,6 @@ package rpc
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -22,11 +21,11 @@ func BlockCommand() *cobra.Command {
 		Short: "Get verified data for a the block at given height",
 		Args:  cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx, err := client.GetClientQueryContext(cmd)
-			if err != nil {
-				return err
-			}
-			var height *int64
+			// clientCtx, err := client.GetClientQueryContext(cmd)
+			// if err != nil {
+			//	return err
+			// }
+			var _ *int64
 
 			// optional height
 			if len(args) > 0 {
@@ -36,16 +35,16 @@ func BlockCommand() *cobra.Command {
 				}
 				if h > 0 {
 					tmp := int64(h)
-					height = &tmp
+					_ = &tmp
 				}
 			}
 
-			output, err := getBlock(clientCtx, height)
-			if err != nil {
-				return err
-			}
+			// output, err := getBlock(clientCtx, height)
+			// if err != nil {
+			//	return err
+			// }
 
-			fmt.Println(string(output))
+			// fmt.Println(string(output))
 			return nil
 		},
 	}

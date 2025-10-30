@@ -24,7 +24,7 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 	/*
 			  Recalculate block rewards
 
-		The block reward for the first two years was fixed at 5 units, i.e. 5 * 10 * 18
+		The block reward for the first two years was fixed at 5 units, i.e. 5 * 10 ^ 18
 
 		From the 3rd year of the third year, the actual annual growth rate of Tat in 2nd year B = total amount of 2nd Tat / total amount of 1st tat, and the deviation between the actual growth rate and the target growth rate
 
