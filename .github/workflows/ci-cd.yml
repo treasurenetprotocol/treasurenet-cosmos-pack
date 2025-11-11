@@ -1,0 +1,19 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop, 'feat/**', 'fix/**', 'hotfix/**' ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  ci-cd:
+    uses: treasurenetprotocol/reusable-workflows/.github/workflows/reusable-go-module-workflow.yml@main
+    with:
+      go-version: '1.22'
+      working-directory: '.'
+      enable-branch-validation: true
+      merge-rules: '{"main": ["develop", "hotfix/*"], "develop": ["feat/*", "fix/*"]}'
+      auto-release: true
+      tag-prefix: 'v'
+    secrets: inherit
