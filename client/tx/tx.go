@@ -241,7 +241,6 @@ func WritePubkeyTxResponse(
 	}
 	ptr, _ := clientCtx.Codec.MarshalInterfaceJSON(pubB)
 	// fmt.Println("ptr=\n", ptr)
-	// fmt.println("ptr2=\n", pubB.GetKey())
 	var pk cryptotypes.PubKey
 	_ = clientCtx.Codec.UnmarshalInterfaceJSON(ptr, &pk)
 	fmt.Println("pk=\n", pk)
@@ -349,9 +348,9 @@ func WriteCrossPubkeyTxResponse(
 	// pubkeytest := "033182E55FBA5F1ECC7B3E7DB6D73F07603933C85355F2C9F4C4E63E130E37ED8B"
 	// pbtest, _ := hex.DecodeString(pubkeytest)
 	// pubtestnew := &ethsecp256k1.PubKey{Key: pbtest}
-	// fmt.Printf("测试feepayer公钥产生的地址11111:=%+v\n", pubtestnew.Address())
+	// fmt.Printf("Address generated from feepayer public key (test 1): %+v\n", pubtestnew.Address())
 	// NewTestAddress, _ := sdk.AccAddressFromHex(pubtestnew.Address().String())
-	// fmt.Printf("测试feepayer公钥产生的地址22222:=%+v\n", NewTestAddress.String())
+	// fmt.Printf("Address generated from feepayer public key (test 2): %+v\n", NewTestAddress.String())
 	if dr.String() != address {
 		hexPK2 := "03"
 		tmpKey2 := make([]byte, ethsecp256k1.PubKeySize)

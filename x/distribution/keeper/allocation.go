@@ -28,7 +28,7 @@ func (k Keeper) AllocateTokens(
 	// fmt.Println("feeCollector:", feeCollector)
 	feesCollectedInt := k.bankKeeper.GetAllBalances(ctx, feeCollector.GetAddress())
 	feesCollected := sdk.NewDecCoinsFromCoins(feesCollectedInt...)
-	// fmt.println("第一次feesCollected:", feesCollected)
+	// fmt.Println("feesCollected (first time):", feesCollected)
 	// transfer collected fees to the distribution module account
 	err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, k.feeCollectorName, types.ModuleName, feesCollectedInt)
 	if err != nil {

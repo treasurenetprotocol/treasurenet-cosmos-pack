@@ -25,10 +25,10 @@ func BlockCommand() *cobra.Command {
 			// if err != nil {
 			//	return err
 			// }
-			var _ *int64
+			/* var _ *int64 */
 
 			// optional height
-			if len(args) > 0 {
+			/*if len(args) > 0 {
 				h, err := strconv.Atoi(args[0])
 				if err != nil {
 					return err
@@ -37,7 +37,7 @@ func BlockCommand() *cobra.Command {
 					tmp := int64(h)
 					_ = &tmp
 				}
-			}
+			}*/
 
 			// output, err := getBlock(clientCtx, height)
 			// if err != nil {

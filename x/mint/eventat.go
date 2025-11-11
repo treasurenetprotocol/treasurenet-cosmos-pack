@@ -11,10 +11,10 @@ func getMintat(ctx context.Context) {
 	for {
 		select {
 		case <-ctx.Done():
-			// fmt.Println("退出协程getMintatceshi！！！")
+			// fmt.Println("Goroutine getMintatceshi exited!!!")
 			return
 		default:
-			// fmt.Println("监控中 getMintatceshi ！！！")
+			// fmt.Println("Monitoring goroutine getMintatceshi...")
 			// Even = new(EventLog)
 			// client, err := ethclient.Dial("ws://127.0.0.1:8546")
 			conn, err := ethclient.Dial("http://127.0.0.1:8555") // ws://127.0.0.1:8546
