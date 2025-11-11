@@ -17,7 +17,7 @@ RUN go install github.com/gogo/protobuf/protoc-gen-gogofast@v${GOGO_PROTOBUF_VER
 RUN go install github.com/gogo/protobuf/protoc-gen-gogofaster@v${GOGO_PROTOBUF_VERSION}
 RUN go install github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway@v${GRPC_GATEWAY_VERSION}
 RUN go install github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger@v${GRPC_GATEWAY_VERSION}
-RUN go install github.com/cosmos/gogoproto/protoc-gen-gocosmos@v1.7.2
+RUN go install github.com/cosmos/gogoproto/protoc-gen-gocosmos@latest
 
 RUN go install github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@latest
 
