@@ -1,6 +1,6 @@
 FROM bufbuild/buf:latest as BUILDER
 
-FROM golang:1.22-alpine
+FROM golang:1.18-alpine
 
 RUN apk add --no-cache git build-base bash ca-certificates
 
