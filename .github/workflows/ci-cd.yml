@@ -10,7 +10,7 @@ jobs:
   ci-cd:
     uses: treasurenetprotocol/reusable-workflows/.github/workflows/reusable-go-module-workflow.yml@main
     with:
-      go-version: '1.22'
+      go-version: '1.18'
       working-directory: '.'
       enable-branch-validation: true
       merge-rules: '{"main": ["develop", "hotfix/*"], "develop": ["feat/*", "fix/*"]}'
