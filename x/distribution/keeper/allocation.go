@@ -130,9 +130,7 @@ func (k Keeper) AllocateTokens(
 			// ref https://github.com/cosmos/cosmos-sdk/issues/2525#issuecomment-430838701
 			tatpowerFraction := sdk.NewDec(newtatpower).QuoTruncate(sdk.NewDec(tattotalpower))
 			votetatnumFraction = sdk.NewDec(votetatnum).QuoTruncate(sdk.NewDec(int64(len(bondedVotes))))
-			//fmt.Printf("tatpowerFraction:%+v\n", tatpowerFraction)
 			tatreward := feesCollected.MulDecTruncate(tatReward).MulDecTruncate(tatpowerFraction).MulDecTruncate(votetatnumFraction)
-			//fmt.Printf("reward:%+v\n", tatreward)
 			ctx.Logger().Info("tatreward",
 				"reward", tatreward,
 			)
@@ -183,7 +181,6 @@ func (k Keeper) AllocateTokens(
 func (k Keeper) AllocateTokensToValidator(ctx sdk.Context, val stakingtypes.ValidatorI, tokens sdk.DecCoins) {
 	// split tokens between validator and delegators according to commission
 	commission := tokens.MulDec(val.GetCommission())
-	//fmt.Printf("commission:%+v\n", commission)
 	shared := tokens.Sub(commission)
 	// update current commission
 	ctx.EventManager().EmitEvent(
@@ -199,10 +196,7 @@ func (k Keeper) AllocateTokensToValidator(ctx sdk.Context, val stakingtypes.Vali
 
 	// update current rewards
 	currentRewards := k.GetValidatorCurrentRewards(ctx, val.GetOperator())
-	//fmt.Printf("currentRewards:%+v\n", currentRewards)
 	currentRewards.Rewards = currentRewards.Rewards.Add(shared...)
-	//fmt.Printf("shared:%+v\n", shared)
-	//fmt.Printf("currentRewards.Rewards:%+v\n", currentRewards.Rewards)
 	k.SetValidatorCurrentRewards(ctx, val.GetOperator(), currentRewards)
 
 	// update outstanding rewards
@@ -214,9 +208,7 @@ func (k Keeper) AllocateTokensToValidator(ctx sdk.Context, val stakingtypes.Vali
 		),
 	)
 	outstanding := k.GetValidatorOutstandingRewards(ctx, val.GetOperator())
-	//fmt.Printf("outstanding:%+v\n", outstanding)
 	outstanding.Rewards = outstanding.Rewards.Add(tokens...)
-	//fmt.Printf("outstanding.Rewards:%+v\n", outstanding.Rewards)
 
 	k.SetValidatorOutstandingRewards(ctx, val.GetOperator(), outstanding)
 }
