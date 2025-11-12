@@ -319,25 +319,19 @@ func WriteCrossPubkeyTxResponse(
 	}
 
 	tmpKey := make([]byte, ethsecp256k1.PubKeySize)
-	//tmpKey := make([]byte, secp256k1.PubKeySize)
 	hexPK1 := "02"
 	pubbyte := []byte(br.From)
-	//accbyte := []byte(msgs.AccountAddress)
 	pubhex := string(pubbyte[2:])
-	//accaddr := string(accbyte[2:])
 	hexPK1 += pubhex
-	//AccAddr := strings.ToUpper(accaddr)
 	bz, _ := hex.DecodeString(hexPK1)
 	copy(tmpKey[:], bz)
 	PubKey_Hex := hex.EncodeToString(tmpKey)
 	fmt.Printf("cross_chain PubKey_Hex=%+v\n", PubKey_Hex)
 	pubB := &ethsecp256k1.PubKey{Key: tmpKey}
-	//pubB := &secp256k1.PubKey{Key: tmpKey}
 	fmt.Printf("cross_chain pubB=%+v\n", pubB)
 	fmt.Printf("cross_chain pubB_address:=%+v\n", pubB.Address())
 	NewAddress, _ := sdk.AccAddressFromHex(pubB.Address().String())
 	address := NewAddress.String()
-	//address, _ := sdk.AccAddressFromBech32(pubB.Address())
 	fmt.Printf("cross_chain address is :%+v\n", address)
 	fmt.Printf("cross_chain delegaor_address is :%+v\ntype:%T\n", dr.String(), dr.String())
 	if dr.String() != address {
@@ -351,7 +345,6 @@ func WriteCrossPubkeyTxResponse(
 		PubKey_Hex2 := hex.EncodeToString(tmpKey2)
 		fmt.Printf("PubKey_Hex=%+v\n", PubKey_Hex2)
 		pubB = &ethsecp256k1.PubKey{Key: tmpKey2}
-		// pubB = &secp256k1.PubKey{Key: tmpKey2}
 	}
 	ptr, _ := clientCtx.Codec.MarshalInterfaceJSON(pubB)
 	fmt.Println("cross_chain ptr=\n", ptr)
@@ -360,11 +353,6 @@ func WriteCrossPubkeyTxResponse(
 	fmt.Println("cross_chain pk=\n", pk)
 	signMode := txf.txConfig.SignModeHandler().DefaultMode()
 	fmt.Printf("cross_chain signMode:=%+v\n", signMode)
-	// signerData := authsigning.SignerData{
-	// 	ChainID:       txf.chainID,
-	// 	AccountNumber: txf.accountNumber,
-	// 	Sequence:      txf.sequence,
-	// }
 	sigData := signing.SingleSignatureData{
 		SignMode:  signMode,
 		Signature: nil,
@@ -591,7 +579,6 @@ func CalculateGas(
 	simRes, err := txSvcClient.Simulate(context.Background(), &tx.SimulateRequest{
 		TxBytes: txBytes,
 	})
-	//fmt.Printf("gas used:= %+v\n", simRes.GasInfo.GasUsed)
 	if err != nil {
 		return nil, 0, err
 	}
