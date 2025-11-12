@@ -75,17 +75,6 @@ func (spkd SetPubKeyDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simulate b
 			pk = simSecp256k1Pubkey
 		}
 		// Only make check if simulate=false
-		// pubB := &ethsecp256k1.PubKey{Key: pk.Bytes()}
-		// fmt.Printf("pubB.Address():=%+v\n", pubB.Address())
-		// if !simulate && !bytes.Equal(pubB.Address(), signers[i]) {
-		// 	return ctx, sdkerrors.Wrapf(sdkerrors.ErrInvalidPubKey,
-		// 		"pubKey does not match signer address %s with signer index: %d", signers[i], i)
-		// }
-		// if !simulate && !bytes.Equal(pk.Address(), signers[i]) {
-		// 	return ctx, sdkerrors.Wrapf(sdkerrors.ErrInvalidPubKey,
-		// 		"pubKey does not match signer address %s with signer index: %d", signers[i], i)
-		// }
-
 		if !simulate && !bytes.Equal(pk.Address(), signers[i]) {
 			pubB := ethsecp256k1.PubKey{Key: pk.Bytes()}
 			// fmt.Printf("pubB.Address():=%+v\n", pubB.Address())
