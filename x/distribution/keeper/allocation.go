@@ -134,7 +134,6 @@ func (k Keeper) AllocateTokens(
 			ctx.Logger().Info("tatreward",
 				"reward", tatreward,
 			)
-			// k.AllocateTokensToValidator(ctx, validator, tatreward)
 			k.AllocateTokensToValidatorTat(ctx, validator, tatreward)
 			remaining = remaining.Sub(tatreward)
 		}
@@ -143,9 +142,6 @@ func (k Keeper) AllocateTokens(
 		voteMultiplier = sdk.OneDec().Sub(proposerMultiplier).Sub(communityTax)
 	}
 	// Get the previous totalPreviousPower
-	// totalallpower := k.stakingKeeper.GetTotalAllPower(ctx)
-	// k.stakingKeeper.SetTotalAllPower(ctx, totalPreviousPower)
-	// if totalPreviousPower == alltokenpower {
 	for _, vote := range bondedVotes {
 		validator := k.stakingKeeper.ValidatorByConsAddr(ctx, vote.Validator.Address)
 		// TODO consider microslashing for missing votes.
@@ -155,24 +151,6 @@ func (k Keeper) AllocateTokens(
 		k.AllocateTokensToValidator(ctx, validator, reward)
 		remaining = remaining.Sub(reward)
 	}
-	// } else {
-	// 	for _, vote := range bondedVotes {
-	// 		validator := k.stakingKeeper.ValidatorByConsAddr(ctx, vote.Validator.Address)
-	// 		fmt.Println("voteMultiplier:", voteMultiplier)
-	// 		// TODO consider microslashing for missing votes.
-	// 		// ref https://github.com/cosmos/cosmos-sdk/issues/2525#issuecomment-430838701
-	// 		//To calculate the reward of stacking, you need to discard the pledge of unit to isolate stacking and bid from each other
-	// 		newunit := validator.GetNewUnitPower().Int64()
-	// 		newpower := vote.Validator.Power - newunit
-	// 		newtotalPreviousPower := totalPreviousPower - newunitallpower
-	// 		//powerFraction := sdk.NewDec(vote.Validator.Power).QuoTruncate(sdk.NewDec(totalPreviousPower))
-	// 		powerFraction := sdk.NewDec(newpower).QuoTruncate(sdk.NewDec(newtotalPreviousPower))
-	// 		reward := feesCollected.MulDecTruncate(voteMultiplier).MulDecTruncate(powerFraction)
-	// 		k.AllocateTokensToValidator(ctx, validator, reward)
-	// 		remaining = remaining.Sub(reward)
-	// 	}
-	// }
-	// allocate community funding
 	feePool.CommunityPool = feePool.CommunityPool.Add(remaining...)
 	k.SetFeePool(ctx, feePool)
 }
