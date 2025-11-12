@@ -384,7 +384,6 @@ func (k Keeper) GetValidators(ctx sdk.Context, maxRetrieve uint32) (validators [
 func (k Keeper) GetBondedValidatorsByPower(ctx sdk.Context) []types.Validator {
 	maxValidators := k.MaxValidators(ctx)
 	validators := make([]types.Validator, maxValidators)
-	// fmt.println("测试GetBondedValidatorsByPower")
 	iterator := k.ValidatorsPowerStoreIterator(ctx)
 	defer iterator.Close()
 
