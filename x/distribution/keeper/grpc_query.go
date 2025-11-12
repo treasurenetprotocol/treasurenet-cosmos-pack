@@ -110,7 +110,6 @@ func (k Keeper) ValidatorCommission(c context.Context, req *types.QueryValidator
 
 // ValidatorTatreward queries accumulated tatreward for a validator
 func (k Keeper) ValidatorTatreward(c context.Context, req *types.QueryValidatorTatrewardRequest) (*types.QueryValidatorTatrewardResponse, error) {
-	// fmt.Println("req:", req)
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -122,7 +121,6 @@ func (k Keeper) ValidatorTatreward(c context.Context, req *types.QueryValidatorT
 	ctx := sdk.UnwrapSDKContext(c)
 
 	valAdr, err := sdk.ValAddressFromBech32(req.ValidatorAddress)
-	// fmt.Println("valAdr:", valAdr)
 	if err != nil {
 		return nil, err
 	}

@@ -44,7 +44,6 @@ func BlockCommand() *cobra.Command {
 			//	return err
 			// }
 
-			// fmt.Println(string(output))
 			return nil
 		},
 	}

@@ -233,14 +233,9 @@ func WritePubkeyTxResponse(
 		PubKey_Hex2 := hex.EncodeToString(tmpKey2)
 		fmt.Printf("PubKey_Hex=%+v\n", PubKey_Hex2)
 		pubB = &ethsecp256k1.PubKey{Key: tmpKey2}
-		//pubB = &secp256k1.PubKey{Key: tmpKey2}
-		// NewAddress, _ := sdk.AccAddressFromHex(pubB.Address().String())
-		// address := NewAddress.String()
-		// //address, _ := sdk.AccAddressFromBech32(pubB.Address())
-		// fmt.Printf("address is :%+v\n", address)
+		// pubB = &secp256k1.PubKey{Key: tmpKey2}
 	}
 	ptr, _ := clientCtx.Codec.MarshalInterfaceJSON(pubB)
-	// fmt.Println("ptr=\n", ptr)
 	var pk cryptotypes.PubKey
 	_ = clientCtx.Codec.UnmarshalInterfaceJSON(ptr, &pk)
 	fmt.Println("pk=\n", pk)
@@ -345,12 +340,6 @@ func WriteCrossPubkeyTxResponse(
 	//address, _ := sdk.AccAddressFromBech32(pubB.Address())
 	fmt.Printf("cross_chain address is :%+v\n", address)
 	fmt.Printf("cross_chain delegaor_address is :%+v\ntype:%T\n", dr.String(), dr.String())
-	// pubkeytest := "033182E55FBA5F1ECC7B3E7DB6D73F07603933C85355F2C9F4C4E63E130E37ED8B"
-	// pbtest, _ := hex.DecodeString(pubkeytest)
-	// pubtestnew := &ethsecp256k1.PubKey{Key: pbtest}
-	// fmt.Printf("Address generated from feepayer public key (test 1): %+v\n", pubtestnew.Address())
-	// NewTestAddress, _ := sdk.AccAddressFromHex(pubtestnew.Address().String())
-	// fmt.Printf("Address generated from feepayer public key (test 2): %+v\n", NewTestAddress.String())
 	if dr.String() != address {
 		hexPK2 := "03"
 		tmpKey2 := make([]byte, ethsecp256k1.PubKeySize)
@@ -362,15 +351,10 @@ func WriteCrossPubkeyTxResponse(
 		PubKey_Hex2 := hex.EncodeToString(tmpKey2)
 		fmt.Printf("PubKey_Hex=%+v\n", PubKey_Hex2)
 		pubB = &ethsecp256k1.PubKey{Key: tmpKey2}
-		//pubB = &secp256k1.PubKey{Key: tmpKey2}
-		// NewAddress, _ := sdk.AccAddressFromHex(pubB.Address().String())
-		// address := NewAddress.String()
-		// //address, _ := sdk.AccAddressFromBech32(pubB.Address())
-		// fmt.Printf("address is :%+v\n", address)
+		// pubB = &secp256k1.PubKey{Key: tmpKey2}
 	}
 	ptr, _ := clientCtx.Codec.MarshalInterfaceJSON(pubB)
 	fmt.Println("cross_chain ptr=\n", ptr)
-	// fmt.println("ptr2=\n", pubB.GetKey())
 	var pk cryptotypes.PubKey
 	_ = clientCtx.Codec.UnmarshalInterfaceJSON(ptr, &pk)
 	fmt.Println("cross_chain pk=\n", pk)

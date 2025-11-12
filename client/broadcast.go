@@ -23,15 +23,12 @@ import (
 func (ctx Context) BroadcastTx(txBytes []byte) (res *sdk.TxResponse, err error) {
 	switch ctx.BroadcastMode {
 	case flags.BroadcastSync:
-		// fmt.Printf("flags.BroadcastSync:%+v\n", flags.BroadcastSync)
 		res, err = ctx.BroadcastTxSync(txBytes)
 
 	case flags.BroadcastAsync:
-		// fmt.Printf("flags.BroadcastAsync:%+v\n", flags.BroadcastAsync)
 		res, err = ctx.BroadcastTxAsync(txBytes)
 
 	case flags.BroadcastBlock:
-		// fmt.Printf("flags.BroadcastAsync:%+v\n", flags.BroadcastAsync)
 		res, err = ctx.BroadcastTxCommit(txBytes)
 
 	default:
@@ -117,7 +114,6 @@ func (ctx Context) BroadcastTxSync(txBytes []byte) (*sdk.TxResponse, error) {
 	}
 
 	res, err := node.BroadcastTxSync(context.Background(), txBytes)
-	// fmt.Printf("res=%+v\n", res)
 	if errRes := CheckTendermintError(err, txBytes); errRes != nil {
 		return errRes, nil
 	}

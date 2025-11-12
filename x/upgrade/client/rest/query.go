@@ -67,7 +67,6 @@ func getDonePlanHandler(clientCtx client.Context) func(http.ResponseWriter, *htt
 		}
 
 		applied := int64(binary.BigEndian.Uint64(res))
-		// fmt.Println(applied)
 		rest.PostProcessResponse(w, clientCtx, applied)
 	}
 }

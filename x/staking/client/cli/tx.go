@@ -176,7 +176,6 @@ $ %s tx staking delegate %s1l2rsakp388kuv9k8qzq6lrm9taddae7fpx59wm 1000stake --f
 			}
 
 			msg := types.NewMsgDelegate(delAddr, valAddr, amount)
-			// fmt.Println("msg", &msg)
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
