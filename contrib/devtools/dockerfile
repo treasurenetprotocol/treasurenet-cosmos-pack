@@ -1,30 +1,57 @@
+# syntax=docker/dockerfile:1
+
+# 保留你原来的多阶段（builder 只是为了兼容你之前的 COPY；若无需要可删）
 FROM bufbuild/buf:latest as builder
 
 FROM golang:1.18-alpine
 
-RUN apk add --no-cache git build-base bash ca-certificates
+RUN apk add --no-cache git build-base bash ca-certificates curl tar
 
 ENV GOBIN=/usr/local/bin
 ENV PATH=$GOBIN:$PATH
 
+# 版本变量（与你原来一致）
 ENV GOLANG_PROTOBUF_VERSION=1.3.5 \
     GOGO_PROTOBUF_VERSION=1.3.2 \
     GRPC_GATEWAY_VERSION=1.14.7 \
     PROTOC_GEN_DOC_VERSION=1.5.1
 
-RUN go install github.com/golang/protobuf/protoc-gen-go@v${GOLANG_PROTOBUF_VERSION}
-RUN go install github.com/gogo/protobuf/protoc-gen-gogo@v${GOGO_PROTOBUF_VERSION}
-RUN go install github.com/gogo/protobuf/protoc-gen-gogofast@v${GOGO_PROTOBUF_VERSION}
-RUN go install github.com/gogo/protobuf/protoc-gen-gogofaster@v${GOGO_PROTOBUF_VERSION}
-RUN go install github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway@v${GRPC_GATEWAY_VERSION}
-RUN go install github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger@v${GRPC_GATEWAY_VERSION}
-# RUN go install github.com/cosmos/gogoproto/protoc-gen-gocosmos@latest
+# ---- 用源码构建，避免 go install @version 的 replace 限制 ----
 
-RUN go install github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@v${PROTOC_GEN_DOC_VERSION}
+# protoc-gen-go（golang/protobuf v1 系列）
+RUN set -eux; \
+  mkdir -p /tmp/proto-tools && cd /tmp/proto-tools; \
+  git clone --depth 1 --branch v${GOLANG_PROTOBUF_VERSION} https://github.com/golang/protobuf; \
+  cd protobuf/protoc-gen-go; \
+  go build -o /usr/local/bin/protoc-gen-go; \
+  cd /; rm -rf /tmp/proto-tools
 
-RUN apk add --no-cache nodejs npm
-RUN npm install -g swagger-combine
+# gogo 套件（protoc-gen-gogo / gogofast / gogofaster）
+RUN set -eux; \
+  mkdir -p /tmp/proto-tools && cd /tmp/proto-tools; \
+  git clone --depth 1 --branch v${GOGO_PROTOBUF_VERSION} https://github.com/gogo/protobuf; \
+  cd protobuf/protoc-gen-gogo && go build -o /usr/local/bin/protoc-gen-gogo; \
+  cd ../protoc-gen-gofast && go build -o /usr/local/bin/protoc-gen-gogofast; \
+  cd ../protoc-gen-gogofaster && go build -o /usr/local/bin/protoc-gen-gogofaster; \
+  cd /; rm -rf /tmp/proto-tools
 
+# grpc-gateway v1（protoc-gen-grpc-gateway / protoc-gen-swagger）
+RUN set -eux; \
+  mkdir -p /tmp/proto-tools && cd /tmp/proto-tools; \
+  git clone --depth 1 --branch v${GRPC_GATEWAY_VERSION} https://github.com/grpc-ecosystem/grpc-gateway; \
+  cd grpc-gateway/protoc-gen-grpc-gateway && go build -o /usr/local/bin/protoc-gen-grpc-gateway; \
+  cd ../protoc-gen-swagger && go build -o /usr/local/bin/protoc-gen-swagger; \
+  cd /; rm -rf /tmp/proto-tools
+
+# protoc-gen-doc（用官方预编译包最稳）
+RUN set -eux; \
+  curl -sSL https://github.com/pseudomuto/protoc-gen-doc/releases/download/v${PROTOC_GEN_DOC_VERSION}/protoc-gen-doc_${PROTOC_GEN_DOC_VERSION}_linux_amd64.tar.gz \
+  | tar xz -C /usr/local/bin protoc-gen-doc
+
+# 你原来的 node / npm 工具
+RUN apk add --no-cache nodejs npm && npm install -g swagger-combine
+
+# 如果你确实需要从 builder 拷贝别的工具，可保留这行；否则也可去掉
 COPY --from=builder /usr/local/bin /usr/local/bin
 
 WORKDIR /workspace
