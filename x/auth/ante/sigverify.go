@@ -18,6 +18,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/legacy/legacytx"
 	authsigning "github.com/cosmos/cosmos-sdk/x/auth/signing"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
+	"github.com/treasurenetprotocol/treasurenet/crypto/ethsecp256k1"
 )
 
 var (
@@ -61,13 +62,10 @@ func (spkd SetPubKeyDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simulate b
 	}
 
 	pubkeys, err := sigTx.GetPubKeys()
-	//fmt.Printf("sigTx.GetPubKeys():=%+v\n", pubkeys)
 	if err != nil {
 		return ctx, err
 	}
-	//fmt.Println("123123123")
 	signers := sigTx.GetSigners()
-	//fmt.Printf("signers is:=%+v\n", signers)
 	for i, pk := range pubkeys {
 		// PublicKey was omitted from slice since it has already been set in context
 		if pk == nil {
@@ -75,16 +73,17 @@ func (spkd SetPubKeyDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simulate b
 				continue
 			}
 			pk = simSecp256k1Pubkey
-			//fmt.Printf("pk is:=%+v\n", pk)
 		}
 		// Only make check if simulate=false
-		//fmt.Printf("pk.Address():=%+v\n", pk.Address())
-		//fmt.Printf("signers[i]:=%+v\n", signers[i])
 		if !simulate && !bytes.Equal(pk.Address(), signers[i]) {
-			return ctx, sdkerrors.Wrapf(sdkerrors.ErrInvalidPubKey,
-				"pubKey does not match signer address %s with signer index: %d", signers[i], i)
-		}
+			pubB := ethsecp256k1.PubKey{Key: pk.Bytes()}
+			// fmt.Printf("pubB.Address():=%+v\n", pubB.Address())
+			if !simulate && !bytes.Equal(pubB.Address(), signers[i]) {
+				return ctx, sdkerrors.Wrapf(sdkerrors.ErrInvalidPubKey,
+					"pubKey does not match signer address %s with signer index: %d", signers[i], i)
+			}
 
+		}
 		acc, err := GetSignerAcc(ctx, spkd.ak, signers[i])
 		if err != nil {
 			return ctx, err

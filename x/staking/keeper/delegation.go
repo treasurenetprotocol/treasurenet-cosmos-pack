@@ -183,6 +183,68 @@ func (k Keeper) IterateUnbondingDelegations(ctx sdk.Context, fn func(index int64
 	}
 }
 
+// IterateDelegatorDelegations iterates through one delegator's delegations.
+func (k Keeper) IterateDelegatorDelegations(ctx sdk.Context, delegator sdk.AccAddress, cb func(delegation types.Delegation) (stop bool)) {
+	store := ctx.KVStore(k.storeKey)
+	delegatorPrefixKey := types.GetDelegationsKey(delegator)
+	iterator := sdk.KVStorePrefixIterator(store, delegatorPrefixKey)
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		delegation := types.MustUnmarshalDelegation(k.cdc, iterator.Value())
+		if cb(delegation) {
+			break
+		}
+	}
+}
+
+// IterateDelegatorUnbondingDelegations iterates through a delegator's unbonding delegations.
+func (k Keeper) IterateDelegatorUnbondingDelegations(ctx sdk.Context, delegator sdk.AccAddress, cb func(ubd types.UnbondingDelegation) (stop bool)) {
+	store := ctx.KVStore(k.storeKey)
+
+	iterator := sdk.KVStorePrefixIterator(store, types.GetUBDsKey(delegator))
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		ubd := types.MustUnmarshalUBD(k.cdc, iterator.Value())
+		if cb(ubd) {
+			break
+		}
+	}
+}
+
+// GetDelegatorUnbonding returns the total amount a delegator has unbonding.
+func (k Keeper) GetDelegatorUnbonding(ctx sdk.Context, delegator sdk.AccAddress) sdk.Int {
+	unbonding := sdk.ZeroInt()
+	k.IterateDelegatorUnbondingDelegations(ctx, delegator, func(ubd types.UnbondingDelegation) bool {
+		for _, entry := range ubd.Entries {
+			unbonding = unbonding.Add(entry.Balance)
+		}
+		return false
+	})
+	return unbonding
+}
+
+// GetDelegatorBonded returs the total amount a delegator has bonded.
+func (k Keeper) GetDelegatorBonded(ctx sdk.Context, delegator sdk.AccAddress) sdk.Int {
+	bonded := sdk.ZeroDec()
+
+	k.IterateDelegatorDelegations(ctx, delegator, func(delegation types.Delegation) bool {
+		validatorAddr, err := sdk.ValAddressFromBech32(delegation.ValidatorAddress)
+		if err != nil {
+			panic(err) // shouldn't happen
+		}
+		validator, found := k.GetValidator(ctx, validatorAddr)
+		if found {
+			shares := delegation.Shares
+			tokens := validator.TokensFromSharesTruncated(shares)
+			bonded = bonded.Add(tokens)
+		}
+		return false
+	})
+	return bonded.RoundInt()
+}
+
 // HasMaxUnbondingDelegationEntries - check if unbonding delegation has maximum number of entries
 func (k Keeper) HasMaxUnbondingDelegationEntries(ctx sdk.Context,
 	delegatorAddr sdk.AccAddress, validatorAddr sdk.ValAddress) bool {
@@ -692,14 +754,12 @@ func (k Keeper) DelegateTat(
 		}
 	}
 	_, newShares = k.AddValidatorTatTokensAndShares(ctx, validator, bondAmt)
-	fmt.Println("Tat测试newShares:", newShares)
 	// Update delegation
 	delegation.TatShares = delegation.Shares.Add(newShares)
 	k.SetDelegation(ctx, delegation)
 
 	// Call the after-modification hook
 	k.AfterDelegationModified(ctx, delegatorAddress, delegation.GetValidatorAddr())
-	fmt.Println("Tat测试创建validator的过程")
 	return newShares, nil
 }
 
@@ -757,7 +817,6 @@ func (k Keeper) Unbond(
 	// remove the shares and coins from the validator
 	// NOTE that the amount is later (in keeper.Delegation) moved between staking module pools
 	validator, amount = k.RemoveValidatorTokensAndShares(ctx, validator, shares)
-	// fmt.Printf("测试路劲validator:%+v\n", validator)
 	if validator.DelegatorShares.IsZero() && validator.IsUnbonded() {
 		// if not unbonded, we must instead remove validator in EndBlocker once it finishes its unbonding period
 		k.RemoveValidator(ctx, validator.GetOperator())

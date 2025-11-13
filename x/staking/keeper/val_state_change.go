@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/rand"
-	"reflect"
 	"sort"
 	"strconv"
 	"strings"
@@ -330,19 +329,9 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, req abci.R
 		if eventlog.MsgIndex == 1 {
 			iterator := k.ValidatorsPowerStoreIterator(ctx)
 			defer iterator.Close()
-			// Tatiterator := k.ValidatorsNewPowerStoreIterator(ctx)
-			// defer Tatiterator.Close()
 			listsupervalidator, listvalidator := k.CombinedSliceList(ctx, iterator, maxValidators, log)
-			fmt.Println("listsupervalidatoe:", listsupervalidator)
-			fmt.Println("listvalidator", listvalidator)
 			newselectlist := SelectList(listsupervalidator, listvalidator, req)
-			// newlist := make(map[string]string, len(newselectlist))
-			// for _, value := range newselectlist {
-			// 	newlist[value] = value
-			// }
 			k.DeletsNewItreator2(ctx, maxValidators, newselectlist)
-			// fmt.Println("删除iterator迭代器:", newselectlist)
-
 			newTatiteratorlist := make(map[string]string)
 			NewTatiterator := k.ValidatorsNewPowerStoreIterator(ctx)
 			defer NewTatiterator.Close()
@@ -453,7 +442,6 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, req abci.R
 				// part of the bonded validator set
 				valAddr := sdk.ValAddress(iterator.Value())
 				validator := k.mustGetValidator(ctx, valAddr)
-				fmt.Printf("validator eventlog.MsgIndex == 2  :%+v\n", validator)
 				if validator.Jailed {
 					panic("should never retrieve a jailed validator from the power store")
 				}
@@ -465,7 +453,6 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, req abci.R
 				}
 
 				valAddrStr, err := sdk.Bech32ifyAddressBytes(sdk.GetConfig().GetBech32ValidatorAddrPrefix(), valAddr)
-				fmt.Println("valAddrStr2:", valAddrStr)
 				if err != nil {
 					return nil, err
 				}
@@ -617,7 +604,6 @@ func (k Keeper) NewApplyAndReturnValidatorSetUpdates(ctx sdk.Context, req abci.R
 	if len(updates) > 0 {
 		k.SetLastTotalPower(ctx, totalPower)
 	}
-	fmt.Println("updates:", updates)
 	return updates, err
 }
 
@@ -851,7 +837,6 @@ func CombinedSlice(iterator sdk.Iterator, maxValidators uint32, validatorsByAddr
 	var ListValidator []string
 	for count := 0; iterator.Valid() && count < int(maxValidators); iterator.Next() {
 		valAddr := sdk.ValAddress(iterator.Value())
-		// fmt.Println("valAddr:", valAddr)
 		validatorstring := valAddr.String()
 		if validatorstring != validatorsByAddr {
 			ListValidator = append(ListValidator, validatorstring)
@@ -869,7 +854,7 @@ func (k Keeper) CombinedSliceList(ctx sdk.Context, iterator sdk.Iterator, maxVal
 	var newunit sdk.Int
 	for count := 0; iterator.Valid() && count < int(maxValidators); iterator.Next() {
 		valAddr := sdk.ValAddress(iterator.Value())
-		// fmt.Println("valAddr:", valAddr)
+		ctx.Logger().Info("validator address", "valAddr", valAddr)
 		validatorstring := valAddr.String()
 		for _, eventlog := range log {
 			if eventlog.MsgIndex == 1 {
@@ -885,30 +870,31 @@ func (k Keeper) CombinedSliceList(ctx sdk.Context, iterator sdk.Iterator, maxVal
 					k.SetNewToken2(ctx, NewZero, valAddr)
 				} else {
 					for _, vlog := range Data {
-						fmt.Printf("Conversion of account address to verifier address :%+v\n", vlog[0].(string))
+						ctx.Logger().Info("Conversion of account address to verifier address",
+							"verifier", vlog[0].(string),
+						)
 						a := []byte(vlog[0].(string))
 						c := string(a[2:])
 						s := strings.ToUpper(c)
 						NewValidatoradd, _ := sdk.ValAddressFromHex(s)
 						NewValidatoraddstring := NewValidatoradd.String()
-						fmt.Printf("CombinedSliceList validatorstring :%+v\n", validatorstring)
-						fmt.Printf("CombinedSliceList NewValidatoraddstring :%+v\n", NewValidatoraddstring)
+						ctx.Logger().Info("CombinedSliceList values",
+							"validatorstring", validatorstring,
+							"new_validator_addrs", NewValidatoraddstring,
+						)
 						if validatorstring == NewValidatoraddstring {
 							//	ListSuperValidator = append(ListValidator, validatorstring)
 							ListSuperValidator = append(ListSuperValidator, validatorstring)
-							fmt.Printf("CombinedSliceList ListSuperValidator :%+v\n", ListSuperValidator)
+							ctx.Logger().Info("CombinedSliceList ListSuperValidator",
+								"list_super_validator", ListSuperValidator,
+							)
 						}
-						fmt.Println(reflect.TypeOf(vlog[1]))
 						stringtat := strconv.FormatFloat(vlog[1].(float64), 'f', -1, 64)
-						fmt.Println("stringtat:", stringtat)
 						tat, _ = sdk.NewIntFromString(stringtat)
 						stringunit := strconv.FormatFloat(vlog[1].(float64), 'f', -1, 64)
-						fmt.Println("stringunit:", stringunit)
 						newunit, _ = sdk.NewIntFromString(stringunit)
 						newtat, _ := tat.MarshalJSON()
 						newunitbyte, _ := newunit.MarshalJSON()
-						fmt.Println("newtat:", newtat)
-						fmt.Println("newunitbyte:", newunitbyte)
 						k.SetTat2(ctx, newtat, NewValidatoradd)
 						k.SetNewToken2(ctx, newunitbyte, NewValidatoradd)
 					}
@@ -981,7 +967,6 @@ func MicsSlice(origin []string, count int, req abci.RequestEndBlock) []string {
 	rand.Shuffle(len(tmpOrigin), func(i int, j int) {
 		tmpOrigin[i], tmpOrigin[j] = tmpOrigin[j], tmpOrigin[i]
 	})
-	fmt.Println(tmpOrigin)
 	result := make([]string, 0, count)
 	for index, value := range tmpOrigin {
 		if index == count {
@@ -999,9 +984,7 @@ func (k Keeper) DeleteNewIterator(ctx sdk.Context) {
 	for ; TatIterator.Valid(); TatIterator.Next() {
 		// everything that is iterated in this loop is becoming or already a
 		// part of the bonded validator set
-		// fmt.Printf("iterator.Value:%v\n", iterator.Value())
 		valAddr := sdk.ValAddress(TatIterator.Value())
-		// fmt.Println("valAddr:", valAddr)
 		validator := k.mustGetValidator(ctx, valAddr)
 		k.SetTatPower(ctx, int64(0), valAddr)
 		k.DeleteValidatorByTatPowerIndex(ctx, validator)
@@ -1049,38 +1032,3 @@ func (k Keeper) DeletsNewItreator2(ctx sdk.Context, maxValidators uint32, newsel
 func (k Keeper) AddNewIterator(ctx sdk.Context, validator types.Validator) {
 	k.SetNewValidatorByPowerIndex(ctx, validator)
 }
-
-// func (k Keeper) AddNewIterator2(ctx sdk.Context, iterator sdk.Iterator, maxValidators uint32, log sdk.ABCIMessageLogs) {
-// 	listsupervalidator, listvalidator := k.CombinedSliceList(ctx, iterator, maxValidators, log)
-// 	fmt.Println("listsupervalidatoe:", listsupervalidator)
-// 	fmt.Println("listvalidator", listvalidator)
-// 	newselectlist := SelectList(listsupervalidator, listvalidator)
-// 	fmt.Println("生成新的迭代器:", 123)
-// 	k.DeleteNewIterator(ctx)
-// 	if len(newselectlist) > 0 {
-// 		fmt.Println("newselectlist:", newselectlist)
-// 		for _, value := range newselectlist {
-// 			Tatvaladdr, _ := sdk.ValAddressFromBech32(value)
-// 			fmt.Println("生成新的迭代器22222222:", Tatvaladdr)
-// 			Tatvalidator := k.mustGetValidator(ctx, Tatvaladdr)
-// 			k.AddNewIterator(ctx, Tatvalidator)
-// 		}
-// 	}
-// }
-// func (k Keeper) AddNewIterator3(ctx sdk.Context, iterator sdk.Iterator, maxValidators uint32, log sdk.ABCIMessageLogs) {
-// 	listsupervalidator, listvalidator := k.CombinedSliceList(ctx, iterator, maxValidators, log)
-// 	fmt.Println("listsupervalidatoe:", listsupervalidator)
-// 	fmt.Println("listvalidator", listvalidator)
-// 	newselectlist := SelectList(listsupervalidator, listvalidator)
-// 	fmt.Println("生成新的迭代器:", 123)
-// 	k.DeleteNewIterator(ctx)
-// 	if len(newselectlist) > 0 {
-// 		fmt.Println("newselectlist:", newselectlist)
-// 		for _, value := range newselectlist {
-// 			Tatvaladdr, _ := sdk.ValAddressFromBech32(value)
-// 			fmt.Println("生成新的迭代器22222222:", Tatvaladdr)
-// 			Tatvalidator := k.mustGetValidator(ctx, Tatvaladdr)
-// 			k.AddNewIterator(ctx, Tatvalidator)
-// 		}
-// 	}
-// }

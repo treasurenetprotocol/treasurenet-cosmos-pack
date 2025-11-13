@@ -150,7 +150,6 @@ func (s txServer) GetTx(ctx context.Context, req *txtypes.GetTxRequest) (*txtype
 }
 
 func (s txServer) BroadcastTx(ctx context.Context, req *txtypes.BroadcastTxRequest) (*txtypes.BroadcastTxResponse, error) {
-	fmt.Println("测试广播9")
 	return client.TxServiceBroadcast(ctx, s.clientCtx, req)
 }
 
