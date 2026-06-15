@@ -3,12 +3,12 @@ updates:
 - package-ecosystem: github-actions
   directory: "/"
   schedule:
-    interval: daily
+    interval: weekly
   open-pull-requests-limit: 10
 - package-ecosystem: gomod
   directory: "/"
   schedule:
-    interval: daily
+    interval: weekly
   open-pull-requests-limit: 10
   reviewers:
   - alexanderbez
@@ -17,9 +17,19 @@ updates:
   - automerge
   - dependencies
 - package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: weekly
+  open-pull-requests-limit: 10
+- package-ecosystem: npm
   directory: "/docs"
   schedule:
-    interval: daily
+    interval: weekly
   open-pull-requests-limit: 10
   reviewers:
   - fadeev
+- package-ecosystem: docker
+  directory: "/"
+  schedule:
+    interval: weekly
+  open-pull-requests-limit: 10
